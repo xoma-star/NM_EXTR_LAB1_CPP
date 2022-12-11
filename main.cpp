@@ -328,9 +328,9 @@ void Generate() {
     f[n + 1] = f[1] + f[n - 2];
     u[n] = u[0] + u[n - 1];
     u[n + 1] = u[1] + u[n - 2];
-    PrintMatrix(A, "A");
-    PrintVector(f, "f");
-    PrintVector(u, "u");
+    // PrintMatrix(A, "A");
+    // PrintVector(f, "f");
+    // PrintVector(u, "u");
 }
 
 void AddErrors(double e_a, double e_h) {
@@ -342,8 +342,8 @@ void AddErrors(double e_a, double e_h) {
         }
         f_[i] = f_[i] * (1 + Random(-1, 1) * e_h);
     }
-    PrintMatrix(A_, "A_");
-    PrintVector(f_, "f_");
+    // PrintMatrix(A_, "A_");
+    // PrintVector(f_, "f_");
 }
 
 void CalculateHAndSigma() {
@@ -351,8 +351,8 @@ void CalculateHAndSigma() {
     std::vector<double> f_minus_f_ = VectorSubtractVector(f, f_);
     h = MatrixNorm(a_minus_a_);
     sigma = VectorNorm(f_minus_f_);
-    PrintMatrix(a_minus_a_, "a_minus_a_");
-    PrintVector(f_minus_f_, "f_minus_f_");
+    // PrintMatrix(a_minus_a_, "A minus A_");
+    // PrintVector(f_minus_f_, "f minus f_");
     std::cout << "h: " << h << std::endl;
     std::cout << "sigma: " << sigma << std::endl;
 }
@@ -365,7 +365,7 @@ void FindLambdaDelta() {
     }
     std::vector<double> L_min = GradientDescent(L, grad_L, x_0, 1e-6, 1000);
     lambda_delta = L(L_min);
-    PrintVector(L_min);
+    // PrintVector(L_min);
     std::cout << "lambda_delta = " << lambda_delta << std::endl;
 }
 
@@ -375,9 +375,9 @@ void FindSolution() {
     std::vector<std::vector<double>> matrix = MatrixAddMatrix(MatrixMultiplyMatrix(TransposeMatrix(A_), A_), MatrixMultiplyNumber(unit_matrix, alpha));
     std::vector<double> vector = MatrixMultiplyVector(TransposeMatrix(A_), f_);
     std::vector<double> answer = CGM(matrix, vector, 1e-6);
-    PrintMatrix(matrix);
-    PrintVector(vector);
-    std::ofstream file("rho.txt");
+    // PrintMatrix(matrix);
+    // PrintVector(vector);
+    std::ofstream file("rho.csv");
     double value = rho(answer, lambda_delta);
     //file << alpha << " " << value << std::endl;
     double need_alpha = 0;
@@ -390,7 +390,7 @@ void FindSolution() {
         answer = CGM(matrix, vector, 1e-6);
         value = rho(answer, lambda_delta);
         if (alpha <= 0.25) {
-            file << alpha << " " << value << std::endl;
+            file << alpha << "," << value << std::endl;
         }
         if (fabs(value) < 1e-4 && alpha >= 0) {
             need_alpha = alpha;
@@ -406,7 +406,7 @@ void FindSolution() {
 }
 
 int main() {
-    srand(2);
+    srand(5);
     Generate();
     double e_a = 0.0001, e_h = 0.0001;
     AddErrors(e_a, e_h);
